@@ -1,0 +1,13 @@
+[yunsukim]
+id          = "yunsukim"
+name        = "Yunsu Kim"
+avatar      = "./avatar.jpg"
+bio         = "Signal processing, and agentic AI systems for analysis, decision-making, and research workflows."
+affiliation = "Changwon National University, SPAI-Lab"
+
+[yunsukim.links]
+email         = "kor8780@gs.cwnu.ac.kr"
+github        = "https://github.com/BluePinetree"
+googleScholar = "https://scholar.google.com/citations?user=PfZc1IkAAAAJ"
+orcid         = "https://orcid.org/0009-0005-4919-0436"
+linkedin      = "https://www.linkedin.com/in/yunsu-kim-2a2b78155"
