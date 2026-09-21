@@ -27,5 +27,35 @@
     "startDate": "2014-03",
     "endDate": "2020-02",
     "location": "Changwon, South Korea"
+  },
+  {
+    "id": "instructor-metaverse-2023",
+    "category": "teaching",
+    "title": "Course Instructor",
+    "org": "Industry-Academic Convergence Technology Education Center, Changwon National University",
+    "startDate": "2023-06",
+    "endDate": "2023-08",
+    "location": "Changwon, South Korea",
+    "description": "Metaverse Platform Development and AI Technology Training — fundamentals of programming, machine learning and deep learning in Python."
+  },
+  {
+    "id": "instructor-smartfactory-2022",
+    "category": "teaching",
+    "title": "Course Instructor",
+    "org": "Industry-Academic Convergence Technology Education Center, Changwon National University",
+    "startDate": "2022-06",
+    "endDate": "2022-08",
+    "location": "Changwon, South Korea",
+    "description": "Smart Factory Supplier IT Specialist Training Program — fundamentals of programming, machine learning and deep learning in Python."
+  },
+  {
+    "id": "instructor-cpp-2021",
+    "category": "teaching",
+    "title": "Course Instructor",
+    "org": "Industry-Academic Convergence Technology Education Center, Changwon National University",
+    "startDate": "2021-07",
+    "endDate": "2021-07",
+    "location": "Changwon, South Korea",
+    "description": "Fundamentals of Programming: C++."
   }
 ]
