@@ -49,8 +49,8 @@ disclosed. The original numbers are left in place, with the recount beside them.
 
 ## What did I learn?
 
-The dangerous failures are the ones that report success. A hyperparameter search configured
-for hundreds of trials that never executed, and was recorded as fully verified. A goal
+The dangerous failures are the ones that report success. A grid search declared over more
+than a thousand model fits that never executed, and was recorded as fully verified. A goal
 check that passed below its own goal after a unit conversion applied to one side only. A
 guard that read the wrong key and fired zero times across the entire archive. `exit code 0`
 is not a success signal.

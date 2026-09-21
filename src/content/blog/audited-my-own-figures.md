@@ -24,11 +24,18 @@ Several of them did not reproduce.
 | 122 `run_*` and 91 `v3_*` directories | **122** and **91** — reproduced exactly |
 | 271 run directories | **Depends on a definition I never stated.** `outputs/` holds 271 entries, of which 270 are directories — the extra entry is a 1,013-byte crash dump. 224 of those directories contain any file. Across `outputs/` and `runs/`, 276 ids have content |
 | A 29-run measurement table | **Not reproducible.** 44 directories carry a non-empty metrics block, and no filter I tried yields 29 |
-| 16 of 16 failed experiments produced a paper | **Not reproducible as a ratio.** 37 directories hold a `paper.md`; 18 of those had no successful execution. The direction holds; the enumeration does not |
+| 16 of 16 failed experiments produced a paper | **Not reproducible — and my replacement was not either.** 37 directories hold a `paper.md`, reproduced exactly. How many of them lacked a successful execution has no single answer: 0 by the runs' own status fields, 15 by absence of a `result.json`, 13 by absence of any `result*.json`, 20 by absence of a non-empty metrics block. The direction holds; the enumeration does not |
 | 77 result files | **Not reproducible.** 96 `result.json`, 342 `result*.json` |
 
 The scripts that produced the original figures are in neither repository. So the
 differences cannot be adjudicated — only disclosed.
+
+One row of that table has since been rewritten again. A second pass on 2026-09-21 could not
+reproduce the recount's own replacement figure — I had written "18 of 37," and 18 comes out
+of no definition I can state. The published "810 trials" turned out to be wrong in the other
+direction: the run's own config declares 1,620 fits, and 810 came from an internal note that
+dropped one axis of the grid. Neither number had ever been recomputed before it was
+published. Both are corrected above.
 
 I left the original numbers where they were and put the recount beside them. This post is
 about why, and about what those numbers were supposed to show in the first place.
@@ -42,8 +49,9 @@ came back marked successful.
 
 Three of the cases, out of seven I eventually documented.
 
-**A search that never ran.** A hyperparameter sweep was configured for 810 trials. The
-result matched the no-search baseline to sixteen decimal places. The configuration had no
+**A search that never ran.** A grid search was declared over 324 hyperparameter
+configurations with 5-fold cross-validation — 1,620 fits. The result matched the no-search
+baseline to sixteen decimal places. The configuration had no
 path to reach the experiment: the argument was accepted by the launcher and never
 forwarded. The sweep never executed once. The system recorded the run as *fully verified*.
 I caught it because two numbers were suspiciously identical. Nothing in the pipeline
