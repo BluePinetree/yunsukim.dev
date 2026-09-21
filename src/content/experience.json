@@ -1,1 +1,31 @@
-[]
+[
+  {
+    "id": "phd-cwnu-2022",
+    "category": "education",
+    "title": "Ph.D. Candidate, Information and Communication Engineering",
+    "org": "Changwon National University",
+    "orgUrl": "https://www.changwon.ac.kr/",
+    "startDate": "2022-03",
+    "location": "Changwon, South Korea"
+  },
+  {
+    "id": "ms-cwnu-2020",
+    "category": "education",
+    "title": "M.S. in Information and Communication Engineering",
+    "org": "Changwon National University",
+    "orgUrl": "https://www.changwon.ac.kr/",
+    "startDate": "2020-03",
+    "endDate": "2022-02",
+    "location": "Changwon, South Korea"
+  },
+  {
+    "id": "bs-cwnu-2014",
+    "category": "education",
+    "title": "B.S. in Information and Communication Engineering",
+    "org": "Changwon National University",
+    "orgUrl": "https://www.changwon.ac.kr/",
+    "startDate": "2014-03",
+    "endDate": "2020-02",
+    "location": "Changwon, South Korea"
+  }
+]

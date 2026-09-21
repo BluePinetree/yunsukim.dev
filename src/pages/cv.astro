@@ -1,0 +1,143 @@
+---
+import { getCollection } from "astro:content"
+
+import { PROFILE, SITE } from "@site-config"
+
+import { loadAllPublications } from "@/lib/publications/loader"
+import CommonLayout from "@/layouts/CommonLayout.astro"
+import Link from "@/components/base/Link.astro"
+import Section from "@/components/layout/Section.astro"
+import PubCard from "@/components/publications/PubCard.astro"
+import ExperienceTimeline from "@/components/timeline/ExperienceTimeline.astro"
+
+const experience = await getCollection("experience")
+const education = experience.filter((e) => e.data.category === "education")
+const research = experience.filter((e) => e.data.category === "research")
+const teaching = experience.filter((e) => e.data.category === "teaching")
+
+const { allPublicationsFlat } = await loadAllPublications()
+
+const projects = (await getCollection("projects")).sort((a, b) => {
+  const at = a.data.toDate?.getTime() ?? a.data.fromDate?.getTime() ?? 0
+  const bt = b.data.toDate?.getTime() ?? b.data.fromDate?.getTime() ?? 0
+  return bt - at
+})
+
+const cvHref =
+  typeof PROFILE.links.cv === "object"
+    ? PROFILE.links.cv?.href
+    : PROFILE.links.cv
+---
+
+<CommonLayout
+  title="CV"
+  description={`Curriculum vitae for ${SITE.author}.`}
+  breadcrumbs={[{ label: "CV", icon: "research" }]}
+  prose={false}
+>
+  <p>
+    {SITE.author}
+    — {PROFILE.tagline}.
+    {cvHref && (
+        <>
+          {" "}
+          <Link href={cvHref} class="cv-download">Download as PDF</Link>.
+        </>
+      )}
+  </p>
+
+  {education.length > 0 && (
+      <Section title="Education">
+        <ExperienceTimeline entries={education} />
+      </Section>
+    )}
+
+  {research.length > 0 && (
+      <Section title="Research">
+        <ExperienceTimeline entries={research} />
+      </Section>
+    )}
+
+  <Section title="Publications">
+    <ul class="cv-pubs">
+      {allPublicationsFlat.map((pub) => (
+        <li>
+          <PubCard pub={pub} filterableTags={false} />
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section title="Software">
+    <ul class="cv-list">
+      {projects.map((p) => (
+        <li>
+          <Link href={`/projects/${p.id}`}>{p.data.title}</Link>
+          {p.data.description && <span class="cv-muted"> — {p.data.description}</span>}
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  {teaching.length > 0 && (
+      <Section title="Teaching">
+        <ExperienceTimeline entries={teaching} />
+      </Section>
+    )}
+
+  <Section title="Identifiers">
+    <ul class="cv-list">
+      <li>
+        ORCID:{" "}
+        <Link href="https://orcid.org/0009-0005-4919-0436" external>
+          0009-0005-4919-0436
+        </Link>
+      </li>
+      <li>
+        Google Scholar:{" "}
+        <Link
+          href="https://scholar.google.com/citations?user=PfZc1IkAAAAJ"
+          external
+        >
+          PfZc1IkAAAAJ
+        </Link>
+      </li>
+      <li>
+        OpenAlex:{" "}
+        <Link href="https://openalex.org/A5032267446" external>
+          A5032267446
+        </Link>
+      </li>
+      <li>
+        GitHub:{" "}
+        <Link href="https://github.com/BluePinetree" external
+          >BluePinetree</Link
+        >
+      </li>
+    </ul>
+  </Section>
+</CommonLayout>
+
+<style>
+  .cv-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .cv-pubs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+
+  .cv-muted {
+    color: var(--muted-foreground);
+  }
+</style>

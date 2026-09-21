@@ -74,6 +74,7 @@ export const NAV_LINKS: LinkConfig[] = [
   { href: "/projects", label: "Projects" },
   { href: "/publications", label: "Publications" },
   { href: "/blog", label: "Writing" },
+  { href: "/cv", label: "CV" },
   { href: "/about", label: "About" },
 ]
 
