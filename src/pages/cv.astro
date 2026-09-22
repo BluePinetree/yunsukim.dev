@@ -3,6 +3,8 @@ import { getCollection } from "astro:content"
 
 import { PROFILE, SITE } from "@site-config"
 
+import { Content as Reporting } from "@/content/reporting.md"
+import { Content as Trajectory } from "@/content/trajectory.md"
 import { loadAllPublications } from "@/lib/publications/loader"
 import CommonLayout from "@/layouts/CommonLayout.astro"
 import Link from "@/components/base/Link.astro"
@@ -31,20 +33,24 @@ const cvHref =
 
 <CommonLayout
   title="CV"
-  description={`Curriculum vitae for ${SITE.author}.`}
+  description={`Research trajectory, record, and how ${SITE.author} reports numbers.`}
   breadcrumbs={[{ label: "CV", icon: "research" }]}
   prose={false}
 >
-  <p>
-    {SITE.author}
-    — {PROFILE.tagline}.
+  <p class="cv-lede">
+    I am a Ph.D. student in the Department of Information and Communication
+    Engineering at Changwon National University, in SPAI-Lab.
     {cvHref && (
         <>
           {" "}
-          <Link href={cvHref} class="cv-download">Download as PDF</Link>.
+          <Link href={cvHref}>Download this as a PDF</Link>.
         </>
       )}
   </p>
+
+  <Section title="How the work connects">
+    <div class="cv-prose"><Trajectory /></div>
+  </Section>
 
   {education.length > 0 && (
       <Section title="Education">
@@ -73,7 +79,9 @@ const cvHref =
       {projects.map((p) => (
         <li>
           <Link href={`/projects/${p.id}`}>{p.data.title}</Link>
-          {p.data.description && <span class="cv-muted"> — {p.data.description}</span>}
+          {p.data.description && (
+            <span class="cv-muted"> — {p.data.description}</span>
+          )}
         </li>
       ))}
     </ul>
@@ -85,7 +93,15 @@ const cvHref =
       </Section>
     )}
 
+  <Section title="How I report numbers">
+    <div class="cv-prose"><Reporting /></div>
+  </Section>
+
   <Section title="Identifiers">
+    <p class="cv-muted cv-disambig">
+      There is at least one other researcher publishing in AI under the same
+      name, working on machine translation and NLP. These are mine.
+    </p>
     <ul class="cv-list">
       <li>
         ORCID:{" "}
@@ -119,6 +135,10 @@ const cvHref =
 </CommonLayout>
 
 <style>
+  .cv-lede {
+    margin-block-end: var(--space-m);
+  }
+
   .cv-list {
     list-style: none;
     padding: 0;
@@ -139,5 +159,9 @@ const cvHref =
 
   .cv-muted {
     color: var(--muted-foreground);
+  }
+
+  .cv-disambig {
+    margin-block-end: var(--space-s);
   }
 </style>
