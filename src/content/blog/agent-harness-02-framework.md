@@ -2,7 +2,7 @@
 title: "Agent Harness #2 — What the Framework Was Actually Doing"
 description: "I built the pipeline on a multi-agent framework. Counting the call sites later showed it ran one agent with one task, every time — and that the study had lost its independent variable."
 createdAt: 2026-09-22
-draft: true
+draft: false
 stage: "budding"
 order: 2
 authors:
