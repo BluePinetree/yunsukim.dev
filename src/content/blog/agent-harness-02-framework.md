@@ -31,15 +31,42 @@ execute.
 
 The conventional way to do that in an agent framework is the agent–tool pattern:
 
-```
-FileCoder agent
-  └── WorkspaceWriteTool
-        └── writes file content → disk
-```
+<svg viewBox="0 0 420 252" role="img" width="100%" style="max-width:420px;height:auto;display:block;margin:1.5rem auto" aria-label="Vertical diagram of the agent–tool pattern. A FileCoder agent connects by a dashed edge to a WorkspaceWriteTool, annotated as decided by the model, and the tool connects by a solid edge to a file on disk, annotated as always, once called.">
+<title>The agent–tool pattern, and which of its two edges is a guarantee</title>
+<g fill="none" stroke="currentColor" stroke-width="1.25" opacity="0.85">
+<rect x="125" y="20" width="170" height="34" rx="5"/>
+<rect x="110" y="96" width="200" height="34" rx="5"/>
+<rect x="140" y="172" width="140" height="34" rx="5"/>
+</g>
+<g fill="none" stroke="currentColor" stroke-width="1.25" stroke-dasharray="4 3" opacity="0.5">
+<path d="M210 54 L210 96"/>
+</g>
+<g fill="none" stroke="currentColor" stroke-width="1.25" opacity="0.6">
+<path d="M210 130 L210 172"/>
+<path d="M204 90 L210 96 L216 90"/>
+<path d="M204 166 L210 172 L216 166"/>
+</g>
+<g fill="currentColor" font-family="inherit" font-size="12" text-anchor="middle">
+<text x="210" y="42">FileCoder agent</text>
+<text x="210" y="118">WorkspaceWriteTool</text>
+<text x="210" y="194">file on disk</text>
+</g>
+<g fill="currentColor" font-size="10" opacity="0.6">
+<text x="224" y="71">the model decides</text>
+<text x="224" y="85">whether this happens</text>
+<text x="224" y="155">always, once called</text>
+</g>
+<g fill="currentColor" font-size="9.5" opacity="0.5">
+<text x="0" y="236">- - -  contingent on the model</text>
+<text x="0" y="249">———  executed by code</text>
+</g>
+</svg>
 
 The agent receives the task, decides to call the tool, passes the generated code as the
 argument, and the tool persists it. That is the pattern the framework documentation
 describes, and it is the pattern I started with.
+
+Only one of those two edges is a guarantee. That turned out to be the whole story.
 
 ## What I did, and what I was reading
 
@@ -117,6 +144,60 @@ Crew(agents=[task.agent], tasks=[task], verbose=False).kickoff()
 Seven call sites. One agent, one task, every time. No sequential process, no hierarchical
 delegation, no agent-to-agent messaging — none of the mechanisms that distinguish a
 multi-agent framework from a loop around a model call.
+
+<svg viewBox="0 0 480 248" role="img" width="100%" style="max-width:480px;height:auto;display:block;margin:1.5rem auto" aria-label="Two diagrams side by side. On the left, what a crew can express: a manager delegating to three agents that message each other. On the right, what every call site in the pipeline actually built: one agent and one task, repeated seven times, with no delegation, no messaging and no shared process.">
+<title>What the framework could express, and what the pipeline instantiated</title>
+<g fill="currentColor" font-size="10.5" opacity="0.6">
+<text x="0" y="12">What a crew can express</text>
+<text x="264" y="12">What every call site built</text>
+</g>
+<g fill="none" stroke="currentColor" stroke-width="1.25" opacity="0.85">
+<rect x="68" y="28" width="90" height="28" rx="4"/>
+<rect x="8" y="104" width="64" height="28" rx="4"/>
+<rect x="81" y="104" width="64" height="28" rx="4"/>
+<rect x="154" y="104" width="64" height="28" rx="4"/>
+</g>
+<g fill="none" stroke="currentColor" stroke-width="1.25" opacity="0.5">
+<path d="M113 56 L40 104"/><path d="M113 56 L113 104"/><path d="M113 56 L186 104"/>
+</g>
+<g fill="none" stroke="currentColor" stroke-width="1.15" stroke-dasharray="3 3" opacity="0.45">
+<path d="M40 132 C 40 162, 113 162, 113 132"/>
+<path d="M113 132 C 113 162, 186 162, 186 132"/>
+</g>
+<g fill="currentColor" font-size="10.5" text-anchor="middle">
+<text x="113" y="46">manager</text>
+<text x="40" y="122">agent</text>
+<text x="113" y="122">agent</text>
+<text x="186" y="122">agent</text>
+</g>
+<g fill="currentColor" font-size="9.5" opacity="0.55" text-anchor="middle">
+<text x="113" y="186">delegation, messaging, process</text>
+</g>
+<g stroke="currentColor" stroke-width="1" stroke-dasharray="3 4" opacity="0.3">
+<path d="M240 20 L240 200"/>
+</g>
+<g fill="none" stroke="currentColor" stroke-width="1.25" opacity="0.85">
+<rect x="272" y="42" width="82" height="28" rx="4"/>
+<rect x="382" y="42" width="82" height="28" rx="4"/>
+</g>
+<g fill="none" stroke="currentColor" stroke-width="1.25" opacity="0.6">
+<path d="M354 56 L382 56"/>
+</g>
+<g fill="currentColor" font-size="10.5" text-anchor="middle">
+<text x="313" y="60">1 agent</text>
+<text x="423" y="60">1 task</text>
+<text x="368" y="94">× 7 call sites</text>
+</g>
+<g fill="currentColor" font-size="9.5" opacity="0.55" text-anchor="middle">
+<text x="368" y="124">no delegation</text>
+<text x="368" y="140">no messaging</text>
+<text x="368" y="156">no shared process</text>
+</g>
+<g fill="currentColor" font-size="10" opacity="0.6" text-anchor="middle">
+<text x="240" y="228">Nothing on the left is reachable from the code path,</text>
+<text x="240" y="243">so all three implementations reduce to the right.</text>
+</g>
+</svg>
 
 Tool usage was just as lopsided:
 
