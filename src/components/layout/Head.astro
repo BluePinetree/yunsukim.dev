@@ -63,8 +63,11 @@ const socialImage = (() => {
   }
 })()
 
-// Canonical URL optimization
-const canonicalURL = Astro.site?.toString() || SITE.href
+// Canonical URL — must point at THIS page, not the site root, and must match the
+// sitemap entry exactly. The site builds with trailingSlash: "never", so strip a
+// trailing slash from every path except the root.
+const canonicalPath = Astro.url.pathname.replace(/(.)\/$/, "$1")
+const canonicalURL = new URL(canonicalPath, Astro.site ?? SITE.href).toString()
 
 // JSON-LD structured data for better SEO
 const structuredData = {
