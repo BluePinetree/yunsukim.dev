@@ -49,7 +49,11 @@ export default defineConfig({
       ],
       hastPlugins: [
         externalLinks,
-        blockExpressiveCode(),
+        // Pass the factory, not its result: satteri calls a factory once per
+        // document, which gives every page its own copy of the code-block
+        // stylesheet. Calling it here shares one instance across the build,
+        // and only the first page rendered gets the styles.
+        blockExpressiveCode,
         ...satteriSidenotes(),
         headingNamespace(),
         headingAnchors(),
