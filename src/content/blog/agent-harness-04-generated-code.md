@@ -166,29 +166,27 @@ puts the effect at "from ~40% of runs to near zero". There is no run list or scr
 that number anywhere in the repository, so read it for what it is — an impression written
 down on the day. The mechanism does not need it.
 
-**Ownership: the right idea, half-implemented.** `metrics.py` started as a model-written
+**Ownership: the right idea, implemented once.** `metrics.py` started as a model-written
 file. A docstring in the template builder records what happened: the training and
 evaluation files import `batch_topk_accuracies`, and when the model wrote `metrics.py` it
 kept giving that function a different name. The fix was not a stronger prompt. The harness
-now writes a canonical `metrics.py` into the workspace before Phase 2 starts, and the repair
-loop is forbidden to touch it.
+now writes a canonical `metrics.py` into the workspace itself, after planning and before
+Phase 2 generates anything.
 
-That is the right move, and it was only made halfway. Which files the harness owns is
-written down in four places, and they disagree:
+That is the right move, and it was made in one place. Each part of the pipeline keeps its
+own list of files the model must leave alone, and only some of them were updated:
 
-| Where | Lists `metrics.py` as harness-owned? |
-|---|---|
-| The template builder that renders the files | yes, for two scaffold types |
-| The repair loop's exclusion set | yes |
-| The workspace manifest | no |
-| The Designer prompt — *"Do NOT include stable scaffold files"* | no |
+| Where | Lists `metrics.py`? | Effect |
+|---|---|---|
+| Template builder | yes, for two scaffold types | writes the canonical file — the one protection that works |
+| Phase 2's "stable" set | yes | none for this file: the set only decides whether the smoke test's entry point is a harness file |
+| Designer prompt — *"Do NOT include stable scaffold files"* | no | the Designer may put `metrics.py` in its plan |
 
-The last row is the one that matters. Phase 2 generates every file the Designer's plan
-lists, and writes it without checking whether the harness already put one there. A plan
-that includes `src/metrics.py` gets the canonical file overwritten by a model-written one —
-the exact failure the move was meant to end. During generation, what kept the model off the
-harness's files was a sentence in a prompt, and the sentence did not name this file. I
-cannot tell from the archive whether a run ever hit it.
+Read in pipeline order, the gap is plain. The Designer may list `src/metrics.py`; the
+harness writes the canonical file; Phase 2 then generates every file on the plan and writes
+it without checking whether one is already there — replacing the canonical file with a
+model-written one, the exact failure the move was meant to end. I cannot tell from the
+archive whether a run ever hit it.
 
 **The import contract: the explanation does not survive a test.** ADR-009 says the Phase 2
 check could not have caught relative imports, because `spec_from_file_location` simulates a
@@ -279,8 +277,8 @@ whole argument for a check that actually runs.
 
 **When the model keeps breaking a contract, stop telling it harder. Take the file away from
 it — in code, in one place.** `metrics.py` did not need a better prompt; it needed a
-different owner, and it got one halfway: taken away from the repair loop, left within reach
-of the generator.
+different owner, and it got one in a single place: the harness writes the file, and nothing
+stops the generator from writing over it.
 
 And for every pre-flight check, read the conditions under which it returns `passed=True`
 without running anything. That list is what it does not check.
